@@ -1,0 +1,87 @@
+{
+  "system_config": {
+    "unit_name": "1st Battalion, 123rd Infantry Regiment",
+    "unit_abbreviation": "1-123 IN",
+    "timezone": "America/New_York",
+    "fiscal_year_start": "October",
+    "work_week_start": "Monday"
+  },
+  "sharepoint_config": {
+    "site_url": "https://[tenant].sharepoint.com/sites/[battalion-name]",
+    "personnel_list": "Personnel_Roster",
+    "mission_list": "Mission_Calendar",
+    "requirements_list": "Mission_Requirements",
+    "conflict_list": "Conflict_Log"
+  },
+  "email_config": {
+    "notification_sender": "s3@[unit].mil",
+    "conflict_recipients": [
+      "s3@[unit].mil",
+      "commander@[unit].mil"
+    ],
+    "daily_summary_recipients": [
+      "s3@[unit].mil",
+      "xo@[unit].mil"
+    ],
+    "notification_hours": {
+      "daily_summary": "0600",
+      "weekly_summary": "Monday 0800"
+    }
+  },
+  "power_bi_config": {
+    "refresh_schedule": [
+      "0600",
+      "1000", 
+      "1400",
+      "1800"
+    ],
+    "dashboard_name": "Mission Scheduling Dashboard",
+    "workspace_name": "[Unit] Operations"
+  },
+  "military_config": {
+    "enlisted_ranks": [
+      "PVT", "PV2", "PFC", "SPC", "CPL", "SGT", "SSG", "SFC", "MSG", "1SG", "SGM", "CSM"
+    ],
+    "officer_ranks": [
+      "2LT", "1LT", "CPT", "MAJ", "LTC", "COL", "BG", "MG", "LTG", "GEN"
+    ],
+    "warrant_ranks": [
+      "WO1", "CW2", "CW3", "CW4", "CW5"
+    ],
+    "common_mos": [
+      "11B", "11C", "12B", "13B", "13F", "19D", "25B", "25U", "35F", "35S", "42A", "68W", "88M", "91B", "92G"
+    ],
+    "mission_types": [
+      "Training",
+      "Operation", 
+      "Exercise",
+      "Maintenance",
+      "Administrative",
+      "Leave/Pass",
+      "Medical",
+      "Education"
+    ]
+  },
+  "conflict_detection": {
+    "overlap_threshold_minutes": 15,
+    "notification_advance_hours": 24,
+    "auto_resolve_conflicts": false,
+    "escalation_threshold_hours": 4
+  },
+  "form_config": {
+    "required_fields": [
+      "personnel_name",
+      "dod_id", 
+      "mission_name",
+      "start_date",
+      "end_date"
+    ],
+    "optional_fields": [
+      "mission_description",
+      "mission_type",
+      "unit",
+      "location",
+      "priority"
+    ]
+  }
+}

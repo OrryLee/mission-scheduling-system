@@ -1,0 +1,21 @@
+DOD_ID,Last_Name,First_Name,Rank,MOS,Unit,Contact_Email,Status
+1234567890,Smith,John,SGT,11B,Alpha Company,john.smith@army.mil,Active
+2345678901,Johnson,Sarah,SPC,68W,Bravo Company,sarah.johnson@army.mil,Active
+3456789012,Williams,Michael,SSG,25B,HHC,michael.williams@army.mil,Active
+4567890123,Brown,Jessica,CPL,42A,HHC,jessica.brown@army.mil,Active
+5678901234,Davis,Robert,PFC,88M,Charlie Company,robert.davis@army.mil,Active
+6789012345,Miller,Amanda,SGT,35F,HHC,amanda.miller@army.mil,Active
+7890123456,Wilson,Christopher,SPC,13F,Alpha Company,christopher.wilson@army.mil,Active
+8901234567,Moore,Jennifer,SSG,91B,Bravo Company,jennifer.moore@army.mil,Active
+9012345678,Taylor,David,CPL,12B,Charlie Company,david.taylor@army.mil,Active
+0123456789,Anderson,Lisa,PFC,92G,HHC,lisa.anderson@army.mil,Active
+1357924680,Garcia,Carlos,SGT,19D,Alpha Company,carlos.garcia@army.mil,Active
+2468135790,Rodriguez,Maria,SPC,25U,Bravo Company,maria.rodriguez@army.mil,Active
+3691472580,Martinez,James,SSG,11C,Charlie Company,james.martinez@army.mil,Active
+4815926370,Lopez,Ashley,CPL,68W,HHC,ashley.lopez@army.mil,Active
+5927384610,Gonzalez,Ryan,PFC,35S,Alpha Company,ryan.gonzalez@army.mil,Active
+6048271593,Hernandez,Nicole,SGT,42A,Bravo Company,nicole.hernandez@army.mil,Active
+7159382640,Young,Kevin,SPC,88M,Charlie Company,kevin.young@army.mil,Active
+8260493751,King,Rachel,SSG,25B,HHC,rachel.king@army.mil,Active
+9371504862,Wright,Brandon,CPL,13F,Alpha Company,brandon.wright@army.mil,Active
+0482615973,Hill,Stephanie,PFC,91B,Bravo Company,stephanie.hill@army.mil,Active

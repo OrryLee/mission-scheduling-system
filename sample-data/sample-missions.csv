@@ -1,0 +1,21 @@
+Mission_Name,Mission_Description,Mission_Type,Start_Date,End_Date,Assigned_Personnel,Unit,Status,Priority,Location
+Training Exercise Alpha,Squad-level movement and communication training,Training,2024-09-25 08:00,2024-09-25 17:00,1234567890,Alpha Company,Planned,High,Training Area Bravo
+Medical Training Certification,Annual medical training and certification,Training,2024-09-25 14:00,2024-09-25 18:00,1234567890,HHC,Planned,Medium,Medical Facility
+Weapons Maintenance,Monthly weapons cleaning and inspection,Maintenance,2024-09-26 09:00,2024-09-26 12:00,2345678901,Bravo Company,Planned,Medium,Arms Room
+Communications Exercise,Radio communication and encryption training,Training,2024-09-26 13:00,2024-09-26 16:00,3456789012,HHC,Planned,High,Communications Center
+Vehicle Inspection,Pre-deployment vehicle inspection,Maintenance,2024-09-27 07:00,2024-09-27 11:00,5678901234,Charlie Company,Planned,High,Motor Pool
+Leadership Development,NCO leadership training session,Training,2024-09-27 14:00,2024-09-27 17:00,6789012345,HHC,Planned,Medium,Conference Room A
+Field Training Exercise,Multi-day field training exercise,Exercise,2024-09-30 06:00,2024-10-02 18:00,7890123456,Alpha Company,Planned,High,Training Area Charlie
+Administrative Tasks,Personnel records update and review,Administrative,2024-09-30 08:00,2024-09-30 12:00,4567890123,HHC,Planned,Low,Admin Office
+Equipment Inventory,Quarterly equipment inventory,Administrative,2024-10-01 09:00,2024-10-01 15:00,8901234567,Bravo Company,Planned,Medium,Supply Room
+Combat Training,Close quarters combat training,Training,2024-10-01 10:00,2024-10-01 14:00,7890123456,Alpha Company,Planned,High,Training Facility
+Physical Fitness Test,Semi-annual PT test administration,Training,2024-10-03 06:00,2024-10-03 10:00,9012345678,Charlie Company,Planned,High,PT Field
+Medical Appointment,Routine medical checkup,Medical,2024-10-03 08:00,2024-10-03 10:00,9012345678,HHC,Planned,Medium,Medical Facility
+Convoy Operations,Convoy security and movement training,Training,2024-10-04 08:00,2024-10-04 16:00,1357924680,Alpha Company,Planned,High,Training Route Alpha
+Maintenance Training,Vehicle maintenance certification,Training,2024-10-04 13:00,2024-10-04 17:00,2468135790,Bravo Company,Planned,Medium,Motor Pool
+Intelligence Briefing,Weekly intelligence update briefing,Administrative,2024-10-07 09:00,2024-10-07 11:00,6789012345,HHC,Planned,High,Briefing Room
+Marksmanship Training,Rifle marksmanship qualification,Training,2024-10-07 08:00,2024-10-07 12:00,3691472580,Charlie Company,Planned,High,Firing Range
+Equipment Repair,Radio equipment repair and testing,Maintenance,2024-10-08 10:00,2024-10-08 14:00,3456789012,HHC,Planned,Medium,Communications Shop
+First Aid Training,Combat first aid certification,Training,2024-10-08 13:00,2024-10-08 17:00,4815926370,HHC,Planned,High,Medical Training Room
+Patrol Operations,Urban patrol tactics training,Training,2024-10-09 07:00,2024-10-09 15:00,5927384610,Alpha Company,Planned,High,Urban Training Site
+Supply Distribution,Monthly supply distribution,Administrative,2024-10-09 09:00,2024-10-09 13:00,6048271593,Bravo Company,Planned,Medium,Supply Warehouse
