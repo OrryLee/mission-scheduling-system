@@ -1,0 +1,350 @@
+model MissionSchedulingModel
+  culture: en-US
+  defaultPowerBIDataSourceVersion: powerBI_V3
+  sourceQueryCulture: en-US
+  dataAccessOptions
+    legacyRedirects
+    returnErrorValuesAsNull
+
+table Personnel_Roster
+  lineageTag: personnel-roster-table
+
+  column DOD_ID
+    dataType: string
+    lineageTag: dod-id-column
+    summarizeBy: none
+    sourceColumn: DOD_ID
+
+  column Last_Name
+    dataType: string
+    lineageTag: last-name-column
+    summarizeBy: none
+    sourceColumn: Last_Name
+
+  column First_Name
+    dataType: string
+    lineageTag: first-name-column
+    summarizeBy: none
+    sourceColumn: First_Name
+
+  column Rank
+    dataType: string
+    lineageTag: rank-column
+    summarizeBy: none
+    sourceColumn: Rank
+
+  column MOS
+    dataType: string
+    lineageTag: mos-column
+    summarizeBy: none
+    sourceColumn: MOS
+
+  column Unit
+    dataType: string
+    lineageTag: unit-column
+    summarizeBy: none
+    sourceColumn: Unit
+
+  column Contact_Email
+    dataType: string
+    lineageTag: contact-email-column
+    summarizeBy: none
+    sourceColumn: Contact_Email
+
+  column Status
+    dataType: string
+    lineageTag: status-column
+    summarizeBy: none
+    sourceColumn: Status
+
+  column Full_Name
+    dataType: string
+    lineageTag: full-name-column
+    summarizeBy: none
+    expression: Personnel_Roster[First_Name] & " " & Personnel_Roster[Last_Name]
+
+  partition Personnel_Roster
+    mode: import
+    source:
+      type: web
+      url: "https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies/_api/web/lists/getbytitle('Personnel_Roster')/items"
+      
+table Mission_Calendar
+  lineageTag: mission-calendar-table
+
+  column Mission_Name
+    dataType: string
+    lineageTag: mission-name-column
+    summarizeBy: none
+    sourceColumn: Mission_Name
+
+  column Mission_Description
+    dataType: string
+    lineageTag: mission-description-column
+    summarizeBy: none
+    sourceColumn: Mission_Description
+
+  column Mission_Type
+    dataType: string
+    lineageTag: mission-type-column
+    summarizeBy: none
+    sourceColumn: Mission_Type
+
+  column Start_Date
+    dataType: dateTime
+    lineageTag: start-date-column
+    summarizeBy: none
+    sourceColumn: Start_Date
+    formatString: mm/dd/yyyy h:mm AM/PM
+
+  column End_Date
+    dataType: dateTime
+    lineageTag: end-date-column
+    summarizeBy: none
+    sourceColumn: End_Date
+    formatString: mm/dd/yyyy h:mm AM/PM
+
+  column Assigned_Personnel
+    dataType: string
+    lineageTag: assigned-personnel-column
+    summarizeBy: none
+    sourceColumn: Assigned_Personnel
+
+  column Unit
+    dataType: string
+    lineageTag: unit-column
+    summarizeBy: none
+    sourceColumn: Unit
+
+  column Status
+    dataType: string
+    lineageTag: status-column
+    summarizeBy: none
+    sourceColumn: Status
+
+  column Priority
+    dataType: string
+    lineageTag: priority-column
+    summarizeBy: none
+    sourceColumn: Priority
+
+  column Location
+    dataType: string
+    lineageTag: location-column
+    summarizeBy: none
+    sourceColumn: Location
+
+  column Duration_Days
+    dataType: int64
+    lineageTag: duration-days-column
+    summarizeBy: sum
+    expression: DATEDIFF(Mission_Calendar[Start_Date], Mission_Calendar[End_Date], DAY) + 1
+
+  partition Mission_Calendar
+    mode: import
+    source:
+      type: web
+      url: "https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies/_api/web/lists/getbytitle('Mission_Calendar')/items"
+      
+table Mission_Requirements
+  lineageTag: mission-requirements-table
+
+  column Mission_ID
+    dataType: string
+    lineageTag: mission-id-column
+    summarizeBy: none
+    sourceColumn: Mission_ID
+
+  column Required_MOS
+    dataType: string
+    lineageTag: required-mos-column
+    summarizeBy: none
+    sourceColumn: Required_MOS
+
+  column Required_Billet
+    dataType: string
+    lineageTag: required-billet-column
+    summarizeBy: none
+    sourceColumn: Required_Billet
+
+  column Slots_Needed
+    dataType: int64
+    lineageTag: slots-needed-column
+    summarizeBy: sum
+    sourceColumn: Slots_Needed
+
+  column Slots_Filled
+    dataType: int64
+    lineageTag: slots-filled-column
+    summarizeBy: sum
+    sourceColumn: Slots_Filled
+
+  column Requirement_Status
+    dataType: string
+    lineageTag: requirement-status-column
+    summarizeBy: none
+    sourceColumn: Requirement_Status
+
+  partition Mission_Requirements
+    mode: import
+    source:
+      type: web
+      url: "https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies/_api/web/lists/getbytitle('Mission_Requirements')/items"
+      
+table Conflict_Log
+  lineageTag: conflict-log-table
+
+  column Personnel_DOD_ID
+    dataType: string
+    lineageTag: personnel-dod-id-column
+    summarizeBy: none
+    sourceColumn: Personnel_DOD_ID
+
+  column Personnel_Name
+    dataType: string
+    lineageTag: personnel-name-column
+    summarizeBy: none
+    sourceColumn: Personnel_Name
+
+  column Mission_1_Name
+    dataType: string
+    lineageTag: mission-1-name-column
+    summarizeBy: none
+    sourceColumn: Mission_1_Name
+
+  column Mission_2_Name
+    dataType: string
+    lineageTag: mission-2-name-column
+    summarizeBy: none
+    sourceColumn: Mission_2_Name
+
+  column Conflict_Type
+    dataType: string
+    lineageTag: conflict-type-column
+    summarizeBy: none
+    sourceColumn: Conflict_Type
+
+  column Detected_Date
+    dataType: dateTime
+    lineageTag: detected-date-column
+    summarizeBy: none
+    sourceColumn: Detected_Date
+    formatString: mm/dd/yyyy h:mm AM/PM
+
+  column Resolution_Status
+    dataType: string
+    lineageTag: resolution-status-column
+    summarizeBy: none
+    sourceColumn: Resolution_Status
+
+  column Resolution_Notes
+    dataType: string
+    lineageTag: resolution-notes-column
+    summarizeBy: none
+    sourceColumn: Resolution_Notes
+
+  partition Conflict_Log
+    mode: import
+    source:
+      type: web
+      url: "https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies/_api/web/lists/getbytitle('Conflict_Log')/items"
+      
+table DateTable
+  lineageTag: date-table
+  dataCategory: Time
+
+  column Date
+    dataType: dateTime
+    lineageTag: date-column
+    summarizeBy: none
+    sourceColumn: Date
+    formatString: mm/dd/yyyy
+
+  column Year
+    dataType: int64
+    lineageTag: year-column
+    summarizeBy: none
+    expression: YEAR(DateTable[Date])
+
+  column Month
+    dataType: int64
+    lineageTag: month-column
+    summarizeBy: none
+    expression: MONTH(DateTable[Date])
+
+  column MonthName
+    dataType: string
+    lineageTag: month-name-column
+    summarizeBy: none
+    expression: FORMAT(DateTable[Date], "MMMM")
+
+  column Quarter
+    dataType: int64
+    lineageTag: quarter-column
+    summarizeBy: none
+    expression: QUARTER(DateTable[Date])
+
+  column WeekOfYear
+    dataType: int64
+    lineageTag: week-of-year-column
+    summarizeBy: none
+    expression: WEEKNUM(DateTable[Date])
+
+  column DayOfWeek
+    dataType: int64
+    lineageTag: day-of-week-column
+    summarizeBy: none
+    expression: WEEKDAY(DateTable[Date])
+
+  column DayName
+    dataType: string
+    lineageTag: day-name-column
+    summarizeBy: none
+    expression: FORMAT(DateTable[Date], "dddd")
+
+  column IsWeekend
+    dataType: boolean
+    lineageTag: is-weekend-column
+    summarizeBy: none
+    expression: DateTable[DayOfWeek] IN {1, 7}
+
+  partition DateTable
+    mode: import
+    source:
+      type: calculated
+      expression: 
+        ADDCOLUMNS(
+          CALENDAR(DATE(2024, 1, 1), DATE(2026, 12, 31)),
+          "Date", [Date]
+        )
+
+// Relationships
+relationship Personnel_DOD_ID from Conflict_Log to Personnel_Roster[DOD_ID]
+  crossFilteringBehavior: bothDirections
+
+relationship Mission_Name from Mission_Requirements[Mission_ID] to Mission_Calendar[Mission_Name]
+  crossFilteringBehavior: bothDirections
+
+relationship Start_Date from Mission_Calendar to DateTable[Date]
+  crossFilteringBehavior: oneToMany
+
+// Measures
+measure 'Total Missions' = COUNTROWS(Mission_Calendar)
+  lineageTag: total-missions-measure
+
+measure 'Active Missions' = CALCULATE(COUNTROWS(Mission_Calendar), Mission_Calendar[Status] = "Active")
+  lineageTag: active-missions-measure
+
+measure 'Personnel Conflicts' = COUNTROWS(Conflict_Log)
+  lineageTag: personnel-conflicts-measure
+
+measure 'Unresolved Conflicts' = CALCULATE(COUNTROWS(Conflict_Log), Conflict_Log[Resolution_Status] = "Unresolved")
+  lineageTag: unresolved-conflicts-measure
+
+measure 'Mission Utilization %' = DIVIDE(CALCULATE(COUNTROWS(Mission_Calendar), Mission_Calendar[Status] IN {"Active", "Planned"}), COUNTROWS(Mission_Calendar), 0) * 100
+  lineageTag: mission-utilization-percent-measure
+  formatString: 0.0"%"
+
+annotation PBI_QueryOrder = ["Personnel_Roster", "Mission_Calendar", "Mission_Requirements", "Conflict_Log", "DateTable"]
+
+annotation PBI_ProTooling = ["DevMode"]
