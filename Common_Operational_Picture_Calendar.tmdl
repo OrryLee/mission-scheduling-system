@@ -1,0 +1,1100 @@
+model CommonOperationalPicture
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Personnel_Roster","Mission_Calendar","Mission_Requirements","Grizzly_Vista_Data","Conflict_Log","DateTable","ConflictDetection"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+table Personnel_Roster
+	lineageTag: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+
+	column DOD_ID
+		dataType: string
+		lineageTag: p1r1-dod-id-column
+		summarizeBy: none
+		sourceColumn: DOD_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Last_Name
+		dataType: string
+		lineageTag: p1r2-last-name-column
+		summarizeBy: none
+		sourceColumn: Last_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column First_Name
+		dataType: string
+		lineageTag: p1r3-first-name-column
+		summarizeBy: none
+		sourceColumn: First_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Full_Name
+		dataType: string
+		lineageTag: p1r4-full-name-calculated
+		isDataTypeInferred
+		expression: Personnel_Roster[First_Name] & " " & Personnel_Roster[Last_Name]
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rank
+		dataType: string
+		lineageTag: p1r5-rank-column
+		summarizeBy: none
+		sourceColumn: Rank
+
+		annotation SummarizationSetBy = Automatic
+
+	column MOS
+		dataType: string
+		lineageTag: p1r6-mos-column
+		summarizeBy: none
+		sourceColumn: MOS
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit
+		dataType: string
+		lineageTag: p1r7-unit-column
+		summarizeBy: none
+		sourceColumn: Unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column Contact_Email
+		dataType: string
+		lineageTag: p1r8-email-column
+		summarizeBy: none
+		sourceColumn: Contact_Email
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: p1r9-status-column
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rank_Order
+		dataType: int64
+		lineageTag: p1r10-rank-order-calculated
+		isDataTypeInferred
+		expression = 
+			SWITCH(
+				Personnel_Roster[Rank],
+				"PVT", 1, "PV2", 2, "PFC", 3, "SPC", 4, "CPL", 5,
+				"SGT", 6, "SSG", 7, "SFC", 8, "MSG", 9, "1SG", 10,
+				"SGM", 11, "CSM", 12, "2LT", 13, "1LT", 14, "CPT", 15,
+				"MAJ", 16, "LTC", 17, "COL", 18, 99
+			)
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Personnel_Roster = m
+		mode: import
+		source =
+				let
+					Source = SharePoint.Contents("https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies"),
+					#"Personnel_Roster Table" = Source{[Name="Personnel_Roster"]}[Content],
+					#"Changed Type" = Table.TransformColumnTypes(#"Personnel_Roster Table",{
+						{"DOD_ID", type text},
+						{"Last_Name", type text},
+						{"First_Name", type text},
+						{"Rank", type text},
+						{"MOS", type text},
+						{"Unit", type text},
+						{"Contact_Email", type text},
+						{"Status", type text}
+					})
+				in
+					#"Changed Type"
+
+table Mission_Calendar
+	lineageTag: b2c3d4e5-f6g7-8901-bcde-f23456789012
+
+	column Mission_Name
+		dataType: string
+		lineageTag: m1c1-mission-name-column
+		summarizeBy: none
+		sourceColumn: Mission_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mission_Description
+		dataType: string
+		lineageTag: m1c2-description-column
+		summarizeBy: none
+		sourceColumn: Mission_Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mission_Type
+		dataType: string
+		lineageTag: m1c3-type-column
+		summarizeBy: none
+		sourceColumn: Mission_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Start_Date
+		dataType: dateTime
+		lineageTag: m1c4-start-date-column
+		summarizeBy: none
+		sourceColumn: Start_Date
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column End_Date
+		dataType: dateTime
+		lineageTag: m1c5-end-date-column
+		summarizeBy: none
+		sourceColumn: End_Date
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Assigned_Personnel
+		dataType: string
+		lineageTag: m1c6-assigned-personnel-column
+		summarizeBy: none
+		sourceColumn: Assigned_Personnel
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit
+		dataType: string
+		lineageTag: m1c7-unit-column
+		summarizeBy: none
+		sourceColumn: Unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: m1c8-status-column
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Priority
+		dataType: string
+		lineageTag: m1c9-priority-column
+		summarizeBy: none
+		sourceColumn: Priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column Location
+		dataType: string
+		lineageTag: m1c10-location-column
+		summarizeBy: none
+		sourceColumn: Location
+
+		annotation SummarizationSetBy = Automatic
+
+	column Duration_Hours
+		dataType: double
+		lineageTag: m1c11-duration-calculated
+		isDataTypeInferred
+		expression = DATEDIFF(Mission_Calendar[Start_Date], Mission_Calendar[End_Date], HOUR)
+		summarizeBy: sum
+		formatString: 0.00
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status_Color
+		dataType: string
+		lineageTag: m1c12-status-color-calculated
+		isDataTypeInferred
+		expression = 
+			SWITCH(
+				Mission_Calendar[Status],
+				"Planned", "#FFA500",    // Orange
+				"Active", "#32CD32",     // Green  
+				"Completed", "#808080",  // Gray
+				"Cancelled", "#FF0000",  // Red
+				"#000000"                // Black default
+			)
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_Source
+		dataType: string
+		lineageTag: m1c13-event-source-calculated
+		isDataTypeInferred
+		expression = "Mission Calendar"
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Mission_Calendar = m
+		mode: import
+		source =
+				let
+					Source = SharePoint.Contents("https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies"),
+					#"Mission_Calendar Table" = Source{[Name="Mission_Calendar"]}[Content],
+					#"Changed Type" = Table.TransformColumnTypes(#"Mission_Calendar Table",{
+						{"Mission_Name", type text},
+						{"Mission_Description", type text},
+						{"Mission_Type", type text},
+						{"Start_Date", type datetime},
+						{"End_Date", type datetime},
+						{"Assigned_Personnel", type text},
+						{"Unit", type text},
+						{"Status", type text},
+						{"Priority", type text},
+						{"Location", type text}
+					})
+				in
+					#"Changed Type"
+
+table Mission_Requirements
+	lineageTag: c3d4e5f6-g7h8-9012-cdef-345678901234
+
+	column Mission_ID
+		dataType: string
+		lineageTag: mr1-mission-id-column
+		summarizeBy: none
+		sourceColumn: Mission_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Required_MOS
+		dataType: string
+		lineageTag: mr2-required-mos-column
+		summarizeBy: none
+		sourceColumn: Required_MOS
+
+		annotation SummarizationSetBy = Automatic
+
+	column Required_Billet
+		dataType: string
+		lineageTag: mr3-required-billet-column
+		summarizeBy: none
+		sourceColumn: Required_Billet
+
+		annotation SummarizationSetBy = Automatic
+
+	column Slots_Needed
+		dataType: int64
+		lineageTag: mr4-slots-needed-column
+		summarizeBy: sum
+		sourceColumn: Slots_Needed
+
+		annotation SummarizationSetBy = Automatic
+
+	column Slots_Filled
+		dataType: int64
+		lineageTag: mr5-slots-filled-column
+		summarizeBy: sum
+		sourceColumn: Slots_Filled
+
+		annotation SummarizationSetBy = Automatic
+
+	column Requirement_Status
+		dataType: string
+		lineageTag: mr6-requirement-status-column
+		summarizeBy: none
+		sourceColumn: Requirement_Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fill_Percentage
+		dataType: double
+		lineageTag: mr7-fill-percentage-calculated
+		isDataTypeInferred
+		expression = 
+			IF(
+				Mission_Requirements[Slots_Needed] = 0,
+				0,
+				DIVIDE(Mission_Requirements[Slots_Filled], Mission_Requirements[Slots_Needed]) * 100
+			)
+		summarizeBy: average
+		formatString: 0.00"%"
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Mission_Requirements = m
+		mode: import
+		source =
+				let
+					Source = SharePoint.Contents("https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies"),
+					#"Mission_Requirements Table" = Source{[Name="Mission_Requirements"]}[Content],
+					#"Changed Type" = Table.TransformColumnTypes(#"Mission_Requirements Table",{
+						{"Mission_ID", type text},
+						{"Required_MOS", type text},
+						{"Required_Billet", type text},
+						{"Slots_Needed", Int64.Type},
+						{"Slots_Filled", Int64.Type},
+						{"Requirement_Status", type text}
+					})
+				in
+					#"Changed Type"
+
+table Grizzly_Vista_Data
+	lineageTag: d4e5f6g7-h8i9-0123-defg-456789012345
+
+	column Event_Name
+		dataType: string
+		lineageTag: gv1-event-name-column
+		summarizeBy: none
+		sourceColumn: Event_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_Type
+		dataType: string
+		lineageTag: gv2-event-type-column
+		summarizeBy: none
+		sourceColumn: Event_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_Description
+		dataType: string
+		lineageTag: gv3-event-description-column
+		summarizeBy: none
+		sourceColumn: Event_Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_Start_Date
+		dataType: dateTime
+		lineageTag: gv4-start-date-column
+		summarizeBy: none
+		sourceColumn: Event_Start_Date
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_End_Date
+		dataType: dateTime
+		lineageTag: gv5-end-date-column
+		summarizeBy: none
+		sourceColumn: Event_End_Date
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit_Company
+		dataType: string
+		lineageTag: gv6-unit-company-column
+		summarizeBy: none
+		sourceColumn: Unit_Company
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color_Tag
+		dataType: string
+		lineageTag: gv7-color-tag-column
+		summarizeBy: none
+		sourceColumn: Color_Tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column Assigned_Personnel_DOD_ID
+		dataType: string
+		lineageTag: gv8-assigned-personnel-column
+		summarizeBy: none
+		sourceColumn: Assigned_Personnel_DOD_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Vista_Duration_Hours
+		dataType: double
+		lineageTag: gv9-duration-calculated
+		isDataTypeInferred
+		expression = DATEDIFF(Grizzly_Vista_Data[Event_Start_Date], Grizzly_Vista_Data[Event_End_Date], HOUR)
+		summarizeBy: sum
+		formatString: 0.00
+
+		annotation SummarizationSetBy = Automatic
+
+	column Vista_Status_Color
+		dataType: string
+		lineageTag: gv10-status-color-calculated
+		isDataTypeInferred
+		expression = 
+			IF(
+				ISBLANK(Grizzly_Vista_Data[Color_Tag]),
+				"#87CEEB",  // Light Blue default for Vista events
+				Grizzly_Vista_Data[Color_Tag]
+			)
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_Source
+		dataType: string
+		lineageTag: gv11-event-source-calculated
+		isDataTypeInferred
+		expression = "Grizzly Vista"
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Grizzly_Vista_Data = m
+		mode: import
+		source =
+				let
+					Source = SharePoint.Contents("https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies"),
+					#"Grizzly_Vista_Data Table" = Source{[Name="Grizzly Vista Data List"]}[Content],
+					#"Changed Type" = Table.TransformColumnTypes(#"Grizzly_Vista_Data Table",{
+						{"Event_Name", type text},
+						{"Event_Type", type text},
+						{"Event_Description", type text},
+						{"Event_Start_Date", type datetime},
+						{"Event_End_Date", type datetime},
+						{"Unit_Company", type text},
+						{"Color_Tag", type text},
+						{"Assigned_Personnel_DOD_ID", type text}
+					})
+				in
+					#"Changed Type"
+
+table Conflict_Log
+	lineageTag: e5f6g7h8-i9j0-1234-efgh-567890123456
+
+	column Personnel_DOD_ID
+		dataType: string
+		lineageTag: cl1-personnel-dod-id-column
+		summarizeBy: none
+		sourceColumn: Personnel_DOD_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Personnel_Name
+		dataType: string
+		lineageTag: cl2-personnel-name-column
+		summarizeBy: none
+		sourceColumn: Personnel_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mission_1_Name
+		dataType: string
+		lineageTag: cl3-mission-1-name-column
+		summarizeBy: none
+		sourceColumn: Mission_1_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mission_2_Name
+		dataType: string
+		lineageTag: cl4-mission-2-name-column
+		summarizeBy: none
+		sourceColumn: Mission_2_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Conflict_Type
+		dataType: string
+		lineageTag: cl5-conflict-type-column
+		summarizeBy: none
+		sourceColumn: Conflict_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Detected_Date
+		dataType: dateTime
+		lineageTag: cl6-detected-date-column
+		summarizeBy: none
+		sourceColumn: Detected_Date
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Resolution_Status
+		dataType: string
+		lineageTag: cl7-resolution-status-column
+		summarizeBy: none
+		sourceColumn: Resolution_Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Resolution_Notes
+		dataType: string
+		lineageTag: cl8-resolution-notes-column
+		summarizeBy: none
+		sourceColumn: Resolution_Notes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Conflict_Severity
+		dataType: string
+		lineageTag: cl9-conflict-severity-calculated
+		isDataTypeInferred
+		expression = 
+			SWITCH(
+				Conflict_Log[Conflict_Type],
+				"Overlap", "Medium",
+				"Double-booking", "High", 
+				"Equipment", "Low",
+				"Medium"
+			)
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Conflict_Color
+		dataType: string
+		lineageTag: cl10-conflict-color-calculated
+		isDataTypeInferred
+		expression = 
+			SWITCH(
+				Conflict_Log[Conflict_Severity],
+				"High", "#FF0000",     // Red
+				"Medium", "#FFA500",   // Orange
+				"Low", "#FFFF00",      // Yellow
+				"#808080"              // Gray default
+			)
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Conflict_Log = m
+		mode: import
+		source =
+				let
+					Source = SharePoint.Contents("https://armyeitaas.sharepoint-mil.us/teams/2-358ARGrizzlies"),
+					#"Conflict_Log Table" = Source{[Name="Conflict_Log"]}[Content],
+					#"Changed Type" = Table.TransformColumnTypes(#"Conflict_Log Table",{
+						{"Personnel_DOD_ID", type text},
+						{"Personnel_Name", type text},
+						{"Mission_1_Name", type text},
+						{"Mission_2_Name", type text},
+						{"Conflict_Type", type text},
+						{"Detected_Date", type datetime},
+						{"Resolution_Status", type text},
+						{"Resolution_Notes", type text}
+					})
+				in
+					#"Changed Type"
+
+table DateTable
+	lineageTag: f6g7h8i9-j0k1-2345-fghi-678901234567
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		lineageTag: dt1-date-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Date
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		lineageTag: dt2-year-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: int64
+		lineageTag: dt3-month-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		dataType: string
+		lineageTag: dt4-month-name-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: MonthName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: dt5-quarter-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeek
+		dataType: int64
+		lineageTag: dt6-day-of-week-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: DayOfWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayName
+		dataType: string
+		lineageTag: dt7-day-name-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: DayName
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsWeekend
+		dataType: boolean
+		lineageTag: dt8-is-weekend-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: IsWeekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsToday
+		dataType: boolean
+		lineageTag: dt9-is-today-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: IsToday
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTable = calculated
+		mode: import
+		source = 
+			VAR StartDate = DATE(2024, 1, 1)
+			VAR EndDate = DATE(2026, 12, 31)
+			RETURN
+			ADDCOLUMNS(
+				CALENDAR(StartDate, EndDate),
+				"Year", YEAR([Date]),
+				"Month", MONTH([Date]),
+				"MonthName", FORMAT([Date], "MMMM"),
+				"Quarter", "Q" & QUARTER([Date]),
+				"DayOfWeek", WEEKDAY([Date]),
+				"DayName", FORMAT([Date], "DDDD"),
+				"IsWeekend", WEEKDAY([Date]) IN {1, 7},
+				"IsToday", [Date] = TODAY()
+			)
+
+table ConflictDetection
+	lineageTag: g7h8i9j0-k1l2-3456-ghij-789012345678
+
+	column Personnel_DOD_ID
+		dataType: string
+		lineageTag: cd1-personnel-dod-id-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Personnel_DOD_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_1_Name
+		dataType: string
+		lineageTag: cd2-event-1-name-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Event_1_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_1_Start
+		dataType: dateTime
+		lineageTag: cd3-event-1-start-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Event_1_Start
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_1_End
+		dataType: dateTime
+		lineageTag: cd4-event-1-end-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Event_1_End
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_1_Source
+		dataType: string
+		lineageTag: cd5-event-1-source-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Event_1_Source
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_2_Name
+		dataType: string
+		lineageTag: cd6-event-2-name-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Event_2_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_2_Start
+		dataType: dateTime
+		lineageTag: cd7-event-2-start-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Event_2_Start
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_2_End
+		dataType: dateTime
+		lineageTag: cd8-event-2-end-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Event_2_End
+		formatString: General Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event_2_Source
+		dataType: string
+		lineageTag: cd9-event-2-source-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Event_2_Source
+
+		annotation SummarizationSetBy = Automatic
+
+	column Overlap_Hours
+		dataType: double
+		lineageTag: cd10-overlap-hours-column
+		summarizeBy: sum
+		isDataTypeInferred
+		sourceColumn: Overlap_Hours
+		formatString: 0.00
+
+		annotation SummarizationSetBy = Automatic
+
+	column Conflict_Detected
+		dataType: boolean
+		lineageTag: cd11-conflict-detected-column
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: Conflict_Detected
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ConflictDetection = calculated
+		mode: import
+		source = 
+			// Create unified event table from Mission Calendar
+			VAR MissionEvents = 
+				SELECTCOLUMNS(
+					Mission_Calendar,
+					"Personnel_DOD_ID", Mission_Calendar[Assigned_Personnel],
+					"Event_Name", Mission_Calendar[Mission_Name],
+					"Event_Start", Mission_Calendar[Start_Date],
+					"Event_End", Mission_Calendar[End_Date],
+					"Event_Source", "Mission Calendar"
+				)
+			
+			// Create unified event table from Grizzly Vista
+			VAR VistaEvents = 
+				SELECTCOLUMNS(
+					Grizzly_Vista_Data,
+					"Personnel_DOD_ID", Grizzly_Vista_Data[Assigned_Personnel_DOD_ID],
+					"Event_Name", Grizzly_Vista_Data[Event_Name],
+					"Event_Start", Grizzly_Vista_Data[Event_Start_Date],
+					"Event_End", Grizzly_Vista_Data[Event_End_Date],
+					"Event_Source", "Grizzly Vista"
+				)
+			
+			// Combine all events
+			VAR AllEvents = UNION(MissionEvents, VistaEvents)
+			
+			// Cross join to find overlaps
+			VAR ConflictCheck = 
+				GENERATE(
+					AllEvents,
+					VAR CurrentPersonnel = [Personnel_DOD_ID]
+					VAR CurrentEventName = [Event_Name]
+					VAR CurrentStart = [Event_Start]
+					VAR CurrentEnd = [Event_End]
+					VAR CurrentSource = [Event_Source]
+					RETURN
+					ADDCOLUMNS(
+						FILTER(
+							AllEvents,
+							[Personnel_DOD_ID] = CurrentPersonnel &&
+							[Event_Name] <> CurrentEventName &&
+							NOT (
+								[Event_End] <= CurrentStart ||
+								[Event_Start] >= CurrentEnd
+							)
+						),
+						"Event_1_Name", CurrentEventName,
+						"Event_1_Start", CurrentStart,
+						"Event_1_End", CurrentEnd,
+						"Event_1_Source", CurrentSource,
+						"Event_2_Name", [Event_Name],
+						"Event_2_Start", [Event_Start],
+						"Event_2_End", [Event_End],
+						"Event_2_Source", [Event_Source],
+						"Overlap_Hours", 
+							DATEDIFF(
+								MAX(CurrentStart, [Event_Start]),
+								MIN(CurrentEnd, [Event_End]),
+								HOUR
+							),
+						"Conflict_Detected", TRUE
+					)
+				)
+			
+			RETURN ConflictCheck
+
+relationship r1
+	fromColumn: Mission_Calendar[Assigned_Personnel]
+	toColumn: Personnel_Roster[DOD_ID]
+	joinOnDateBehavior: datePartOnly
+	crossFilteringBehavior: bothDirections
+
+relationship r2
+	fromColumn: Mission_Requirements[Mission_ID]
+	toColumn: Mission_Calendar[Mission_Name]
+	joinOnDateBehavior: datePartOnly
+	crossFilteringBehavior: bothDirections
+
+relationship r3
+	fromColumn: Grizzly_Vista_Data[Assigned_Personnel_DOD_ID]
+	toColumn: Personnel_Roster[DOD_ID]
+	joinOnDateBehavior: datePartOnly
+	crossFilteringBehavior: bothDirections
+
+relationship r4
+	fromColumn: Conflict_Log[Personnel_DOD_ID]
+	toColumn: Personnel_Roster[DOD_ID]
+	joinOnDateBehavior: datePartOnly
+	crossFilteringBehavior: bothDirections
+
+relationship r5
+	fromColumn: Mission_Calendar[Start_Date]
+	toColumn: DateTable[Date]
+	joinOnDateBehavior: datePartOnly
+	crossFilteringBehavior: oneToMany
+
+relationship r6
+	fromColumn: Grizzly_Vista_Data[Event_Start_Date]
+	toColumn: DateTable[Date]
+	joinOnDateBehavior: datePartOnly
+	crossFilteringBehavior: oneToMany
+
+relationship r7
+	fromColumn: ConflictDetection[Personnel_DOD_ID]
+	toColumn: Personnel_Roster[DOD_ID]
+	joinOnDateBehavior: datePartOnly
+	crossFilteringBehavior: bothDirections
+
+measure 'Total Missions' = COUNTROWS(Mission_Calendar)
+	lineageTag: m001-total-missions
+	formatString: 0
+
+measure 'Active Missions' = 
+	CALCULATE(
+		COUNTROWS(Mission_Calendar),
+		Mission_Calendar[Status] = "Active"
+	)
+	lineageTag: m002-active-missions
+	formatString: 0
+
+measure 'Planned Missions' = 
+	CALCULATE(
+		COUNTROWS(Mission_Calendar),
+		Mission_Calendar[Status] = "Planned"
+	)
+	lineageTag: m003-planned-missions
+	formatString: 0
+
+measure 'Total Conflicts' = COUNTROWS(ConflictDetection)
+	lineageTag: m004-total-conflicts
+	formatString: 0
+
+measure 'Unresolved Conflicts' = 
+	CALCULATE(
+		COUNTROWS(Conflict_Log),
+		Conflict_Log[Resolution_Status] = "Unresolved"
+	)
+	lineageTag: m005-unresolved-conflicts
+	formatString: 0
+
+measure 'Personnel Utilization %' = 
+	VAR TotalPersonnel = COUNTROWS(Personnel_Roster)
+	VAR AssignedPersonnel = 
+		CALCULATE(
+			DISTINCTCOUNT(Mission_Calendar[Assigned_Personnel]),
+			Mission_Calendar[Status] IN {"Active", "Planned"}
+		)
+	RETURN
+	IF(TotalPersonnel > 0, DIVIDE(AssignedPersonnel, TotalPersonnel) * 100, 0)
+	lineageTag: m006-personnel-utilization
+	formatString: 0.00"%"
+
+measure 'Average Mission Duration' = 
+	AVERAGE(Mission_Calendar[Duration_Hours])
+	lineageTag: m007-avg-mission-duration
+	formatString: 0.00
+
+measure 'Vista Events This Month' = 
+	CALCULATE(
+		COUNTROWS(Grizzly_Vista_Data),
+		MONTH(Grizzly_Vista_Data[Event_Start_Date]) = MONTH(TODAY()),
+		YEAR(Grizzly_Vista_Data[Event_Start_Date]) = YEAR(TODAY())
+	)
+	lineageTag: m008-vista-events-month
+	formatString: 0
+
+measure 'Mission Fill Rate %' = 
+	VAR TotalSlots = SUMX(Mission_Requirements, Mission_Requirements[Slots_Needed])
+	VAR FilledSlots = SUMX(Mission_Requirements, Mission_Requirements[Slots_Filled])
+	RETURN
+	IF(TotalSlots > 0, DIVIDE(FilledSlots, TotalSlots) * 100, 0)
+	lineageTag: m009-mission-fill-rate
+	formatString: 0.00"%"
+
+measure 'Conflict Alert Text' = 
+	VAR ConflictCount = [Total Conflicts]
+	VAR UnresolvedCount = [Unresolved Conflicts]
+	RETURN
+	IF(
+		ConflictCount > 0,
+		"⚠️ " & ConflictCount & " CONFLICTS DETECTED (" & UnresolvedCount & " UNRESOLVED)",
+		"✅ NO SCHEDULING CONFLICTS"
+	)
+	lineageTag: m010-conflict-alert-text
+
+measure 'Selected Event Details' = 
+	VAR SelectedMission = SELECTEDVALUE(Mission_Calendar[Mission_Name])
+	VAR SelectedVista = SELECTEDVALUE(Grizzly_Vista_Data[Event_Name])
+	VAR EventName = COALESCE(SelectedMission, SelectedVista, "No Event Selected")
+	VAR EventType = 
+		IF(
+			NOT ISBLANK(SelectedMission),
+			SELECTEDVALUE(Mission_Calendar[Mission_Type]),
+			SELECTEDVALUE(Grizzly_Vista_Data[Event_Type])
+		)
+	VAR EventStart = 
+		IF(
+			NOT ISBLANK(SelectedMission),
+			SELECTEDVALUE(Mission_Calendar[Start_Date]),
+			SELECTEDVALUE(Grizzly_Vista_Data[Event_Start_Date])
+		)
+	VAR EventEnd = 
+		IF(
+			NOT ISBLANK(SelectedMission),
+			SELECTEDVALUE(Mission_Calendar[End_Date]),
+			SELECTEDVALUE(Grizzly_Vista_Data[Event_End_Date])
+		)
+	VAR AssignedPersonnel = 
+		IF(
+			NOT ISBLANK(SelectedMission),
+			SELECTEDVALUE(Mission_Calendar[Assigned_Personnel]),
+			SELECTEDVALUE(Grizzly_Vista_Data[Assigned_Personnel_DOD_ID])
+		)
+	RETURN
+	"EVENT: " & EventName & UNICHAR(10) &
+	"TYPE: " & EventType & UNICHAR(10) &
+	"START: " & FORMAT(EventStart, "MM/DD/YYYY HH:MM") & UNICHAR(10) &
+	"END: " & FORMAT(EventEnd, "MM/DD/YYYY HH:MM") & UNICHAR(10) &
+	"PERSONNEL: " & AssignedPersonnel
+	lineageTag: m011-selected-event-details
+
+measure 'Rolling 30 Day Filter' = 
+	VAR Today = TODAY()
+	VAR StartDate = Today
+	VAR EndDate = Today + 30
+	RETURN
+	IF(
+		SELECTEDVALUE(DateTable[Date]) >= StartDate &&
+		SELECTEDVALUE(DateTable[Date]) <= EndDate,
+		1,
+		0
+	)
+	lineageTag: m012-rolling-30-day-filter
+
+measure 'Rolling 60 Day Filter' = 
+	VAR Today = TODAY()
+	VAR StartDate = Today
+	VAR EndDate = Today + 60
+	RETURN
+	IF(
+		SELECTEDVALUE(DateTable[Date]) >= StartDate &&
+		SELECTEDVALUE(DateTable[Date]) <= EndDate,
+		1,
+		0
+	)
+	lineageTag: m013-rolling-60-day-filter
+
+measure 'Rolling 90 Day Filter' = 
+	VAR Today = TODAY()
+	VAR StartDate = Today
+	VAR EndDate = Today + 90
+	RETURN
+	IF(
+		SELECTEDVALUE(DateTable[Date]) >= StartDate &&
+		SELECTEDVALUE(DateTable[Date]) <= EndDate,
+		1,
+		0
+	)
+	lineageTag: m014-rolling-90-day-filter
+
+role 'Mission Planners'
+	modelPermission: read
+
+	tablePermission 'Personnel_Roster' = [Unit] = USERNAME()
+	tablePermission 'Mission_Calendar' = [Unit] = USERNAME()
+	tablePermission 'Mission_Requirements' = TRUE()
+	tablePermission 'Grizzly_Vista_Data' = [Unit_Company] = USERNAME()
+	tablePermission 'Conflict_Log' = TRUE()
+	tablePermission 'DateTable' = TRUE()
+	tablePermission 'ConflictDetection' = TRUE()
+
+role 'Command Staff'
+	modelPermission: read
+
+	tablePermission 'Personnel_Roster' = TRUE()
+	tablePermission 'Mission_Calendar' = TRUE()
+	tablePermission 'Mission_Requirements' = TRUE()
+	tablePermission 'Grizzly_Vista_Data' = TRUE()
+	tablePermission 'Conflict_Log' = TRUE()
+	tablePermission 'DateTable' = TRUE()
+	tablePermission 'ConflictDetection' = TRUE()
+
+role 'Vista Users'
+	modelPermission: read
+
+	tablePermission 'Personnel_Roster' = [Unit] = USERNAME()
+	tablePermission 'Mission_Calendar' = FALSE()
+	tablePermission 'Mission_Requirements' = FALSE()
+	tablePermission 'Grizzly_Vista_Data' = TRUE()
+	tablePermission 'Conflict_Log' = FALSE()
+	tablePermission 'DateTable' = TRUE()
+	tablePermission 'ConflictDetection' = FALSE()
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryRelationships = {"columnCount":26,"keyColumnNames":["Personnel_Roster[DOD_ID]","Mission_Calendar[Mission_Name]","Mission_Requirements[Mission_ID]","Grizzly_Vista_Data[Event_Name]","Conflict_Log[Personnel_DOD_ID]","DateTable[Date]","ConflictDetection[Personnel_DOD_ID]"],"queryRelationships":[{"name":"r1","columnNames":["Mission_Calendar[Assigned_Personnel]","Personnel_Roster[DOD_ID]"]},{"name":"r2","columnNames":["Mission_Requirements[Mission_ID]","Mission_Calendar[Mission_Name]"]},{"name":"r3","columnNames":["Grizzly_Vista_Data[Assigned_Personnel_DOD_ID]","Personnel_Roster[DOD_ID]"]},{"name":"r4","columnNames":["Conflict_Log[Personnel_DOD_ID]","Personnel_Roster[DOD_ID]"]},{"name":"r5","columnNames":["Mission_Calendar[Start_Date]","DateTable[Date]"]},{"name":"r6","columnNames":["Grizzly_Vista_Data[Event_Start_Date]","DateTable[Date]"]},{"name":"r7","columnNames":["ConflictDetection[Personnel_DOD_ID]","Personnel_Roster[DOD_ID]"]}]}
+
+annotation __TEdtr = {"version":"3.8.0.0","build":"3.8.0.0"}

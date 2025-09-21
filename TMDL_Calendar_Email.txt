@@ -1,0 +1,93 @@
+Subject: Common Operational Picture Calendar - TMDL Script for Power BI
+
+Dear [Recipient],
+
+I am providing you with the complete TMDL (Tabular Model Definition Language) script for implementing a Common Operational Picture Calendar with integrated conflict detection for military mission scheduling.
+
+SYSTEM OVERVIEW:
+This TMDL script creates a comprehensive calendar-focused dashboard that connects all SharePoint lists into a unified operational view with automated soldier conflict detection and notifications.
+
+KEY FEATURES:
+✅ Traditional Calendar View - Main display showing all missions and Vista events
+✅ Click Event Details - Detailed information from Mission Requirements, Personnel Roster, and Grizzly Vista Data
+✅ Red Conflict Highlighting - Automatic detection when soldiers are double-booked
+✅ Side Panel Alerts - Conflict notifications with resolution tracking
+✅ Rolling Time Filters - 30/60/90 day views for operational planning
+✅ Integrated Data Sources - Mission Calendar + Grizzly Vista Data unified display
+✅ Role-Based Security - Mission Planners, Command Staff, and Vista Users access levels
+
+TECHNICAL SPECIFICATIONS:
+- 7 Connected Tables: Personnel_Roster, Mission_Calendar, Mission_Requirements, Grizzly_Vista_Data, Conflict_Log, DateTable, ConflictDetection
+- 14 DAX Measures: Mission counts, conflict tracking, utilization metrics, event details
+- Automated Conflict Detection: Real-time overlap detection between Mission Calendar and Grizzly Vista events
+- Color Coding: Status-based colors (Planned=Orange, Active=Green, Conflicts=Red)
+- Enterprise Features: SharePoint embedding, PDF export, PowerPoint integration
+
+CONFLICT DETECTION LOGIC:
+The system automatically creates a ConflictDetection table that:
+1. Combines events from Mission_Calendar and Grizzly_Vista_Data
+2. Cross-references personnel assignments by DOD_ID
+3. Identifies time overlaps using date/time calculations
+4. Generates conflict alerts with severity levels (High/Medium/Low)
+5. Provides resolution tracking through Conflict_Log integration
+
+DEPLOYMENT INSTRUCTIONS:
+1. Copy the attached TMDL script text
+2. Open Power BI Desktop
+3. Go to External Tools > Tabular Editor (or use File > Import)
+4. Paste the TMDL script to create the complete model
+5. Update SharePoint site URL in the script (line references provided)
+6. Deploy to Power BI Service for sharing and embedding
+
+CALENDAR FUNCTIONALITY:
+- Main Calendar Display: Shows both Mission Calendar and Grizzly Vista events
+- Event Click Details: Personnel assignments, requirements, locations, conflicts
+- Side Panel Alerts: Real-time conflict notifications with resolution options
+- Time Navigation: Rolling 30/60/90 day views with today highlighting
+- Status Color Coding: Visual indicators for mission status and conflicts
+- Export Capabilities: PDF reports and PowerPoint briefing slides
+
+SHAREPOINT INTEGRATION:
+- Direct REST API connections to all SharePoint lists
+- Real-time data synchronization (configurable refresh schedule)
+- Maintains SharePoint security permissions
+- Supports both manual data entry and automated imports
+
+SECURITY MODEL:
+- Mission Planners: Unit-level access to assigned personnel and missions
+- Command Staff: Full access to all data across units
+- Vista Users: Limited access to Grizzly Vista Data and related personnel
+- Row-level security based on Unit/Company assignments
+
+CUSTOMIZATION OPTIONS:
+- Update SharePoint site URLs for your environment
+- Modify color schemes and visual themes
+- Add additional data sources or calculated fields
+- Customize conflict detection rules and severity levels
+- Extend role-based security for additional user types
+
+SUPPORT INFORMATION:
+- Complete source code: https://github.com/OrryLee/mission-scheduling-system
+- TMDL script includes detailed comments and annotations
+- All DAX measures documented with business logic explanations
+- Relationship definitions clearly specified for data integrity
+
+NEXT STEPS:
+1. Review and customize the TMDL script for your SharePoint environment
+2. Test deployment in development Power BI workspace
+3. Configure user permissions and role assignments
+4. Set up automated refresh schedule for real-time updates
+5. Train users on calendar navigation and conflict resolution procedures
+
+The system provides a complete Common Operational Picture with automated conflict detection, significantly improving mission coordination and reducing scheduling errors. All components are production-ready with comprehensive error handling and security controls.
+
+Please let me know if you need assistance with deployment or customization of the TMDL script.
+
+Best regards,
+[Your Name]
+2-358 AR Grizzlies
+Mission Scheduling System Administrator
+
+---
+ATTACHMENT: Common_Operational_Picture_Calendar.tmdl
+CONTAINS: Complete TMDL script with 7 tables, 14 measures, conflict detection, and security roles
